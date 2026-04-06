@@ -31,3 +31,31 @@ THEN
     Predict = True
 ======================================================
 ```
+# The result is quite okay-ish
+If you are not satisfied with the performance just play a bit around with the cut-off point. Also remember to feed the tool with standardized logistic regression functions!
+
+```
+--- Loading and Standardizing Data ---
+--- Training Standardized Logistic Regression ---
+--- Applying Heuristic Rules ---
+
+======================================================
+                 PERFORMANCE COMPARISON
+======================================================
+1. Standardized Logistic Regression:
+   Accuracy:  79.46%
+   Precision: 71.66%
+   Recall:    76.90%
+   Confusion Matrix (Absolute & % of Actual Class):
+      [TN:  445 (81.1%) | FP:  104 (18.9%)]
+      [FN:   79 (23.1%) | TP:  263 (76.9%)]
+
+2. Generated 'OR' Rules (from Standardized Data):
+   Accuracy:  75.08%
+   Precision: 63.76%
+   Recall:    81.29%
+   Confusion Matrix (Absolute & % of Actual Class):
+      [TN:  391 (71.2%) | FP:  158 (28.8%)]
+      [FN:   64 (18.7%) | TP:  278 (81.3%)]
+======================================================
+```
