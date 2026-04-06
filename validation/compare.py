@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix
 
 def load_and_prep_titanic():
     """Loads a public Titanic dataset and applies standard preprocessing."""
@@ -33,7 +33,6 @@ def predict_with_rules(row):
     fare_std = row['Fare']
     
     # --- REPLACE THESE CONDITIONS WITH YOUR NEW CLI OUTPUT ---
-    # Example structure based on the standardized math:
     if (pclass_std < -0.4653) or \
        (sex_female_std > 0.3760) or \
        (age_std < -0.9038) or \
@@ -72,16 +71,24 @@ def main():
     print("======================================================")
     
     # Evaluate Original Model
+    cm_lr = confusion_matrix(y, lr_predictions)
     print("1. Standardized Logistic Regression:")
     print(f"   Accuracy:  {accuracy_score(y, lr_predictions) * 100:.2f}%")
     print(f"   Precision: {precision_score(y, lr_predictions) * 100:.2f}%")
-    print(f"   Recall:    {recall_score(y, lr_predictions) * 100:.2f}%\n")
+    print(f"   Recall:    {recall_score(y, lr_predictions) * 100:.2f}%")
+    print("   Confusion Matrix:")
+    print(f"      [TN: {cm_lr[0][0]:4d} | FP: {cm_lr[0][1]:4d}]")
+    print(f"      [FN: {cm_lr[1][0]:4d} | TP: {cm_lr[1][1]:4d}]\n")
     
     # Evaluate Extracted Rules
+    cm_rules = confusion_matrix(y, rule_predictions)
     print("2. Generated 'OR' Rules (from Standardized Data):")
     print(f"   Accuracy:  {accuracy_score(y, rule_predictions) * 100:.2f}%")
     print(f"   Precision: {precision_score(y, rule_predictions) * 100:.2f}%")
     print(f"   Recall:    {recall_score(y, rule_predictions) * 100:.2f}%")
+    print("   Confusion Matrix:")
+    print(f"      [TN: {cm_rules[0][0]:4d} | FP: {cm_rules[0][1]:4d}]")
+    print(f"      [FN: {cm_rules[1][0]:4d} | TP: {cm_rules[1][1]:4d}]")
     print("======================================================")
 
 if __name__ == "__main__":
