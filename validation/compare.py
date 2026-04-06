@@ -33,10 +33,10 @@ def predict_with_rules(row):
     fare_std = row['Fare']
     
     # --- REPLACE THESE CONDITIONS WITH YOUR NEW CLI OUTPUT ---
-    if (pclass_std < -0.4653) or \
-       (sex_female_std > 0.3760) or \
-       (age_std < -0.9038) or \
-       (fare_std > 4.7000):
+    if (pclass_std < -1.3043) or \
+       (sex_female_std > 1.0538) or \
+       (age_std < -2.5333) or \
+       (fare_std > 13.1730):
         return 1  # Predict Survived
     else:
         return 0  # Predict Did Not Survive
