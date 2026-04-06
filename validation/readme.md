@@ -1,4 +1,5 @@
-#The generated if-then-else ruleset derived from a standardized logistic regression function based on the titanic dataset:
+# The generated if-then-else ruleset 
+Derived from a standardized logistic regression function based on the titanic dataset:
 
 ```
 ======================================================
