@@ -1,4 +1,6 @@
-The generated if-then-else ruleset derived from a logistic regression function based on the titanic dataset:
+#The generated if-then-else ruleset derived from a logistic regression function based on the titanic dataset:
+
+```
 ======================================================
   Logistic Regression to 'OR' Rule Converter CLI
 ======================================================
@@ -28,3 +30,4 @@ IF
 THEN
     Predict = True
 ======================================================
+```
