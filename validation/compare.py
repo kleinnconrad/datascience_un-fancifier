@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 def load_and_prep_titanic():
@@ -24,60 +25,60 @@ def load_and_prep_titanic():
 def predict_with_rules(row):
     """
     PASTE YOUR CLI TOOL LOGIC HERE.
-    The rule below is just a placeholder structure.
-    Replace the thresholds with what your CLI tool outputs.
+    Note: The variables below are now Z-scores, not raw numbers.
     """
-    # Example structure based on an OR rule:
-    # IF Pclass < X OR Sex_Female > Y OR Age < Z OR Fare > W THEN True
+    pclass_std = row['Pclass']
+    sex_female_std = row['Sex_Female']
+    age_std = row['Age']
+    fare_std = row['Fare']
     
-    pclass = row['Pclass']
-    sex_female = row['Sex_Female']
-    age = row['Age']
-    fare = row['Fare']
-    
-    # --- REPLACE THESE CONDITIONS WITH YOUR CLI OUTPUT ---
-    if (pclass < 2.0833) or \
-       (sex_female > -0.9615) or \
-       (age < 62.5000) or \
-       (fare > -1250.0000):
+    # --- REPLACE THESE CONDITIONS WITH YOUR NEW CLI OUTPUT ---
+    # Example structure based on the standardized math:
+    if (pclass_std < -0.4653) or \
+       (sex_female_std > 0.3760) or \
+       (age_std < -0.9038) or \
+       (fare_std > 4.7000):
         return 1  # Predict Survived
     else:
         return 0  # Predict Did Not Survive
 
 def main():
-    print("--- Loading Data ---")
+    print("--- Loading and Standardizing Data ---")
     df = load_and_prep_titanic()
     
-    X = df[['Pclass', 'Sex_Female', 'Age', 'Fare']]
+    X_raw = df[['Pclass', 'Sex_Female', 'Age', 'Fare']]
     y = df['Survived']
     
-    print("--- Training Original Logistic Regression ---")
-    # We force the coefficients to match the ones provided to you
-    # so the comparison is mathematically exact.
-    lr = LogisticRegression()
-    lr.fit(X, y) # Fit just to initialize the classes
-    lr.intercept_ = np.array([2.50])
-    lr.coef_ = np.array([[-1.20, 2.60, -0.04, 0.002]])
+    # Scale the data so mean = 0 and std = 1
+    scaler = StandardScaler()
+    X_scaled = pd.DataFrame(scaler.fit_transform(X_raw), columns=X_raw.columns)
     
-    # Get original predictions
-    lr_predictions = lr.predict(X)
+    print("--- Training Standardized Logistic Regression ---")
+    # Initialize model with the specific standardized coefficients
+    lr = LogisticRegression()
+    lr.fit(X_scaled, y) 
+    lr.intercept_ = np.array([-0.47])
+    lr.coef_ = np.array([[-1.01, 1.25, -0.52, 0.10]])
+    
+    # Get original predictions from the scaled model
+    lr_predictions = lr.predict(X_scaled)
     
     print("--- Applying Heuristic Rules ---")
-    # Apply your custom rule to every row
-    rule_predictions = df.apply(predict_with_rules, axis=1)
+    # Apply your custom rule to every scaled row
+    rule_predictions = X_scaled.apply(predict_with_rules, axis=1)
     
     print("\n======================================================")
     print("                 PERFORMANCE COMPARISON")
     print("======================================================")
     
     # Evaluate Original Model
-    print("1. Original Logistic Regression:")
+    print("1. Standardized Logistic Regression:")
     print(f"   Accuracy:  {accuracy_score(y, lr_predictions) * 100:.2f}%")
     print(f"   Precision: {precision_score(y, lr_predictions) * 100:.2f}%")
     print(f"   Recall:    {recall_score(y, lr_predictions) * 100:.2f}%\n")
     
     # Evaluate Extracted Rules
-    print("2. Generated 'OR' Rules:")
+    print("2. Generated 'OR' Rules (from Standardized Data):")
     print(f"   Accuracy:  {accuracy_score(y, rule_predictions) * 100:.2f}%")
     print(f"   Precision: {precision_score(y, rule_predictions) * 100:.2f}%")
     print(f"   Recall:    {recall_score(y, rule_predictions) * 100:.2f}%")
